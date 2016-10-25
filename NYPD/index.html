@@ -1,0 +1,378 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<style>
+   #info
+  {
+	width: 20%;
+	display:inline;
+
+  }
+
+  #accident
+  {
+	display: inline;
+	margin-top:50px;
+	float:left;
+  }
+  #area
+  {
+	visibility: hidden;
+	display: inline;
+	position: absolute;
+	margin-top:50px;
+	float:left;
+  }
+
+   #death
+  {
+	visibility: hidden;
+	display: inline;
+	position: absolute;
+	margin-top:50px;
+	float:left;
+
+  }
+   #injury
+  {
+	visibility: hidden;
+	display: inline;
+	position: absolute;
+	margin-top:50px;
+	float:left;
+  }
+  .form-group{
+	float: left;
+	}	
+	
+   #circle{
+   position: relative;
+   right: 23%;
+   top:113px;
+   }
+}
+</style>
+
+<link rel="stylesheet" href="bootstrap.min.css"/>
+<script src="jquery.min.js"></script>
+<script src="d3.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVlOqQqTU2Q5p7fhCUwPc_rYt1nEnsEB8"></script>
+<link rel="stylesheet" href="jquery-ui.css">
+<script src="http://fgnass.github.io/spin.js/spin.js"></script>
+<script src="jquery-1.10.2.js"></script>
+<script src="jquery-ui.js"></script>
+<script src="Chart.min.js"></script>
+<script src="Accident.js"></script>
+<script>
+        var map1;
+        
+        function dothis() {
+                  var mapOptions;
+                  if(outputLat2.length==0)
+                 	 mapOptions = {
+                 	 center: { lat: 40.748817, lng: -73.985428},
+                 	 zoom: 10
+                	};
+
+                  else
+                 	 mapOptions = {
+                	  center: { lat: parseFloat(outputLat2[0]), lng: parseFloat(outputLong2[0])},
+                	  zoom: 10
+                	};
+              var map = new google.maps.Map(document.getElementById('map-canvas'),
+                    mapOptions);
+
+              var marker;
+              var contentString;
+              var infowindow;
+              var myLatlng;
+              var mylat;
+              var myLatlng
+              var i;
+              for (var i=0; i<outputLat2.length; i++) {
+                var myaddress = "";
+                mylat = outputLat2[i];
+                mylng = outputLong2[i];
+                console.log("my lat = " + mylat);
+                console.log("my lat = " + mylng);
+                
+                
+                
+                contentString = myaddress;
+                console.log(contentString);
+
+                infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                myLatlng = new google.maps.LatLng(mylat,mylng);
+                marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                  infowindow.open(map,marker);
+                });
+              }
+              
+        }
+
+        
+    </script>
+	<script>
+  		$(function() {
+  		  $( "#date" ).datepicker();
+ 		 });
+    </script>
+    <script>
+        function initialize() {
+        var mapOptions = {
+          center: { lat: 40.748817, lng: -73.985428},
+          zoom: 10
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+<title>Motor Vehicle Accidents Report of New York</title>
+</head>
+
+<script>
+function getInformation()
+{
+	address= document.getElementById('addr').value;
+	zipcode= document.getElementById('zip').value;
+	console.log(addr);
+}
+</script>
+
+
+<body>
+	
+	<div class="container">
+	<nav class="navbar navbar-inverse ">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">NYPD Motor Vehicle Collision Report</a>
+    </div>
+      </div>
+</nav>
+		<h2>Check Yo'Self Before You Wreck Yourself</h2>
+		
+		<div class="graph">
+			<ul class=" nav nav-pills">
+				<li name="accident" class="active"><a href="#/">Accident Type</a></li>
+				<li name="area"><a href="#/">Borough</a></li>
+				<li name="injury"><a href="#/">People Injured</a></li>
+				<li name="death"><a href="#/">People Killed</a></li>
+			</ul>
+		</div>
+		<div>
+		<div id="circle"></div>
+		<canvas id="accident" width="600" height="300"></canvas>
+		<canvas id="area" width="600" height="300"></canvas>
+		<canvas id="death" width="600" height="300"></canvas>
+		<canvas id="injury" width="600" height="300"></canvas>
+		</div>
+
+		
+		<div id="map-canvas" style="width: 46%; height: 350px; clear: right;"></div>
+
+		<div>
+		<form id="info" role="form" action="#">
+		<div class="form-group" >
+		  <label for="address">Street:</label>
+		  <input type="text" class="form-control" id="addr" placeholder="Enter Street">
+		</div>
+		
+		<div class="form-group">
+		  <label for="zipcode">ZipCode:</label>
+		  <input type="text" class="form-control" id="zip" placeholder="Enter Zip Code">
+		</div>
+		
+		<div class="form-group">
+		  <label for="borough">Borough:</label>
+		<!--   <input type="text" class="form-control" id="borough" placeholder="Enter Borough">  -->
+		 <select class="form-control" id="borough">
+		  	<option></option>	
+      		  <option>QUEENS</option>
+      		  <option>MANHATTAN</option>
+      		  <option>BRONX</option>
+       		 <option>BROOKLYN</option>
+			 <option>STATEN ISLAND</option>
+
+      	  </select> 
+		</div>
+		
+		<div class="form-group">
+		  <label for="date">Date:</label>
+		  <input type="text" class="form-control" id="date" placeholder="Enter Date">
+		</div>
+				<button type="submit" class="btn btn-default" style="display:block; clear:both;" onclick="query()">Submit</button>
+			</form>
+		</div>
+		<table class="table table-striped">
+    <thead id="tableHead">
+      <tr>
+        <th>Date</th>
+        <th>time</th>
+        <th>Street</th>
+        <th>Zip Code</th>
+        <th>Borough</th>
+        <th>Number of People Injured</th>
+		<th>Number of People Killed</th>
+		<th>Contibuting factor (vehicle 1)</th>
+		<th>Contibuting factor (vehicle 2)</th>
+
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
+  <ul id="backword" style="float:left;" class="pagination">
+  	<li onclick="firstClick()"><a href="#/">First</a></li>
+    <li onclick="prevClick()"><a href="#/">Prev</a></li>
+  </ul>
+  
+  <ul id="pages" style="float:left;" class="pagination"></ul>
+  <ul id="forward" style="float:left;" class="pagination">
+  	<li onclick="nextClick()"><a href="#/">Next</a></li>
+    <li onclick="lastClick()"><a href="#/">Last</a></li>
+  </ul>
+
+  
+
+  
+ </div>
+ <script>
+function chooseGraph()
+{
+	$('.graph li').click(function()
+	{
+		var before= "#"+$('.active').attr('name')+"";
+		var after= "#"+$(this).attr('name')+"";
+		$('.active').removeClass();
+		$(this).addClass("active");
+	
+		$(before).css('visibility', 'hidden');
+		$(after).css('visibility', 'visible');
+		$(after).css('position', 'relative');
+		$(before).css('position', 'absolute');
+	});
+}
+
+
+setTimeout(function(){
+	
+	var labels=[];
+	var accident= [];
+	var death= [];
+	var borough=[];
+	var injury=[];
+	
+	chooseGraph();
+	$("#circle").hide();
+	
+	for(var i =0; i < 5; i++)
+	{
+		labels.push(window['reasons'][i][0]);
+		accident.push(window['reasons'][i][1]);
+	}
+	
+	data= {
+		labels: labels,
+		datasets: [
+			{
+				label: "First data set",
+				fillColor: "rgba(151, 187, 205, 0.5)",
+				strokeColor: "rgba(151, 187, 205, 0.8)",
+				highlightFill: "rgba(151, 187, 205, 0.75)",
+				highlightStroke: "rgba(151, 187, 205, 1)",
+				data: accident
+			}
+		]
+	}
+	
+	var ctx= document.getElementById('accident').getContext('2d');
+	var myBarChar= new Chart(ctx).Bar(data, {barShowStroke: false});
+	
+	labels=["Queens", "Brooklyn", "Manhattan", "Bronx", "Staten Island"];
+	borough.push(window['queensAccident']);
+	borough.push(window['brooklynAccident']);
+	borough.push(window['manhattanAccident']);
+	borough.push(window['bronxAccident']);
+	borough.push(window['siAccident']);
+	
+	data= {
+		labels: labels,
+		datasets: [
+			{
+				label: "First data set",
+				fillColor: "rgba(151, 187, 205, 0.5)",
+				strokeColor: "rgba(151, 187, 205, 0.8)",
+				highlightFill: "rgba(151, 187, 205, 0.75)",
+				highlightStroke: "rgba(151, 187, 205, 1)",
+				data: borough
+			}
+		]
+	}
+	var ctx2= document.getElementById('area').getContext('2d');
+	var myBarChar2= new Chart(ctx2).Bar(data, {barShowStroke: false});
+	
+	death.push(window['killed']['QUEENS']);
+	death.push(window['killed']['BROOKLYN']);
+	death.push(window['killed']['MANHATTAN']);
+	death.push(window['killed']['BRONX']);
+	death.push(window['killed']['STATEN ISLAND']);
+	
+	data= {
+		labels: labels,
+		datasets: [
+			{
+				label: "First data set",
+				fillColor: "rgba(151, 187, 205, 0.5)",
+				strokeColor: "rgba(151, 187, 205, 0.8)",
+				highlightFill: "rgba(151, 187, 205, 0.75)",
+				highlightStroke: "rgba(151, 187, 205, 1)",
+				data: death
+			}
+		]
+	}
+	
+	var ctx3 = document.getElementById('death').getContext('2d');
+	var myBarChar3= new Chart(ctx3).Bar(data, {barShowStroke: false});
+	
+	injury.push(window['injured']['QUEENS']);
+	injury.push(window['injured']['BROOKLYN']);
+	injury.push(window['injured']['MANHATTAN']);
+	injury.push(window['injured']['BRONX']);
+	injury.push(window['injured']['STATEN ISLAND']);
+	
+	data= {
+		labels: labels,
+		datasets: [
+			{
+				label: "First data set",
+				fillColor: "rgba(151, 187, 205, 0.5)",
+				strokeColor: "rgba(151, 187, 205, 0.8)",
+				highlightFill: "rgba(151, 187, 205, 0.75)",
+				highlightStroke: "rgba(151, 187, 205, 1)",
+				data: injury
+			}
+		]
+	}
+	
+	var ctx4 = document.getElementById('injury').getContext('2d');
+	var myBarChar4= new Chart(ctx4).Bar(data, {barShowStroke: false});
+	
+}, 10000);
+
+</script>
+
+</body>
+
+</html>
